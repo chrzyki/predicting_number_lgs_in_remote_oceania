@@ -1,1 +1,1 @@
-##HELLO
+This is a repository for analysis associated with Hedvig Skirgård's study of predicting the number of languages per island group in Remote Oceania.
