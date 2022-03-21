@@ -3,3 +3,11 @@
 .RData
 .Ruserdata
 .DS_Store
+*.aux
+*.lof
+*.log
+*.lot
+*.out
+*.gz
+*.pdf
+*.toc
