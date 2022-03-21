@@ -1,0 +1,9 @@
+{"data_sources":{
+  "glottolog_cldf":{
+    "location":"data/zenodo/glottolog-glottolog-cldf-ac0d616",
+    "zenodo_url": "https://zenodo.org/record/4061165/files/glottolog/glottolog-cldf-v4.3.zip"
+  }
+  
+}
+  
+}

@@ -1,6 +1,6 @@
-source("requirements.R")
+source("01_requirements.R")
 
-Polygon_lgs_glottocodes_sep <- read_csv("data/Remote_Oceania_Political_complex_and_more/RO_polygons_grouped_with_languages.csv") %>% 
+Polygon_lgs_glottocodes_sep <- read_csv("data/RO_polygons_grouped_with_languages.csv") %>% 
   filter(!is.na(glottocodes)) %>% 
   mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude)) %>% 
   mutate(glottocodes = str_split(glottocodes, ",")) %>%
@@ -8,7 +8,7 @@ Polygon_lgs_glottocodes_sep <- read_csv("data/Remote_Oceania_Political_complex_a
   mutate(glottocode = trimws(glottocodes)) 
 
 #read in glottolog
-glottolog_lat_long_shifted <- read_tsv("../Glottolog_look_up_table/Glottolog_lookup_table_Hedvig_output/Glottolog_lookup_table_Heti_edition.tsv")  %>% 
+glottolog_lat_long_shifted <- read_tsv("data/glottolog_language_table_wide_df.tsv")  %>% 
   mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude))
 
 #worldmaps
