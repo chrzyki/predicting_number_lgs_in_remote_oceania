@@ -8,6 +8,7 @@ pacman::p_load(
   missForest,
   reshape2,
   modEvA,
+  MuMIn,
   rsq,
   cluster,
   viridis,
@@ -73,10 +74,6 @@ pacman::p_load(
   scales
 )
 
-p_load_gh("abrozzi/microbio")
-
-
-
 unlist_entire_df <- function(data) {
   temp1 <- sapply(data, is.list)
   temp2 <- do.call(
@@ -87,21 +84,3 @@ unlist_entire_df <- function(data) {
 
 #quieting down tidyverse
 options(tidyverse.quiet = TRUE)
-# 
-# # 
-#  plot_fns <- list.files(path = "output/plots/", recursive = T, full.names = T)
-#  
-#  new_location <- "../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/"
-#  
-#  file.copy(from = plot_fns, to = new_location, 
-#           overwrite = T, recursive = T, 
-#            copy.mode = TRUE, copy.date = T)
-#  
-#  
-#  ASR_fns <- list.files(path = "output/ASR/", recursive = T, full.names = T)
-#  
-#  new_location <- "../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/ASR/"
-#  
-#  file.copy(from = plot_fns, to = new_location, 
-#            overwrite = T, recursive = T, 
-#            copy.mode = TRUE, copy.date = T)
