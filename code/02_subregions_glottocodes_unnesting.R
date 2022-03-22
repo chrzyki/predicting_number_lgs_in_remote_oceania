@@ -1,9 +1,9 @@
 source("01_requirements.R")
 
-subregions <- read_tsv("data/oceania_subregions.tsv") %>% 
+subregions <- read.delim("data/oceania_subregions.tsv", sep = "\t") %>% 
   dplyr::select(-Smallest_Island_group)
 
-read_csv("data/RO_polygons_grouped_with_languages.csv") %>% 
+read.delim("data/RO_polygons_grouped_with_languages.csv", sep = ",") %>% 
   filter(!is.na(glottocodes)) %>%
   mutate(glottocodes = str_split(glottocodes, ",")) %>%
   unnest(glottocodes) %>% 
@@ -11,7 +11,7 @@ read_csv("data/RO_polygons_grouped_with_languages.csv") %>%
   distinct(Smallest_Island_group, Glottocode) %>% 
   group_by(Glottocode) %>% 
   summarise(Smallest_Island_group = paste(Smallest_Island_group, collapse = ", ")) %>% 
-  full_join(subregions) %>% 
+  full_join(subregions, by = "Glottocode") %>% 
   write_tsv("data/oceania_subregions.tsv")
   
 #read_csv("data/Remote_Oceania_Political_complex_and_more/RO_polygons_grouped_with_languages.csv") %>%
