@@ -55,7 +55,6 @@ basemap +
   theme(legend.position = "None") 
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
-ggsave("../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/polygon_Marck_group_map.png", width = 15, height = 8)
 
 
 
@@ -79,7 +78,6 @@ basemap +
 #  geom_label(data = medium_groups_labels, aes(x = mean_long, y = mean_lat, label = Medium_only_merged_for_shared_language), size = 0.6)
 
 ggsave("output/plots/polygon_medium_group_map.png", width = 15, height = 8)
-ggsave("../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/polygon_medium_group_map.png", width = 15, height = 8)
 
 
 
