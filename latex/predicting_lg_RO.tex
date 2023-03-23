@@ -90,7 +90,8 @@
 \title{Predicting number of languages per island group in Remote Oceania}
 %\large A thesis submitted for the degree of Doctor of Philosophy of The Australian National University\\}
 
-\author{Hedvig Skirg{\aa}rd}
+\author{anon}
+%\author{Hedvig Skirg{\aa}rd}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
 
@@ -134,8 +135,19 @@ Why are there more languages in some places than others? The number of languages
 
 Understanding the mechanics of language change and diversification is essential to understanding human history. It is the story of how languages, and therefore also communities, become separated from each other. This research topic has received a lot of attention in recent years (c.f. \citet{gavin2017process,  greenhill2015demographic, Pacheco_Coelho_2019, hua2019ecological}), and in this chapter we will take a closer look at Remote Oceania. 
 
-Fig.~\ref{RO_overnight_coloured_dots_SM_edit} (section \ref{chapter_intro}) shows islands of Oceania. Languages are points, coloured by language family. In the Polynesian islands (S\={a}moa, Tonga, Rarotonga, Tokelau etc) there is generally one language per island group. However, Melanesian Remote Oceania (Vanuatu, Temotu, Fiji and Kanaky (New Caledonia)) have many more languages, sometimes up to 20 languages on the very same island. What explains this difference?
+Fig.~\ref{RO_overnight_coloured_dots} shows islands of Oceania. Languages are points, coloured by language family. In the Polynesian islands (S\={a}moa, Tonga, Rarotonga, Tokelau etc) there is generally one language per island group. However, Melanesian Remote Oceania (Vanuatu, Temotu, Fiji and Kanaky (New Caledonia)) have many more languages, sometimes up to 20 languages on the very same island. What explains this difference?
 %What are the mechanics of this?
+
+
+
+\begin{sidewaysfigure}[p]
+\centering
+\includegraphics[width=19cm]{illustrations/CartoGIS_oceania_languages_subgreions_edited.png}
+\caption{}
+\label{RO_overnight_coloured_dots}
+\end{sidewaysfigure}
+
+
 
 % grouped by overnight sailing distances \citep{mark_1986, marck2000}
 
@@ -161,7 +173,7 @@ This chapter tests this hypothesis by constructing a model where we try to predi
  
 \subsection{Previous research}
 \label{nonlingfactors}
-Linguists, anthropologists and scholars of other fields have long remarked on the link between linguistic diversity and political structure in Remote Oceania. One of the oldest examples of this observation is Turner who travelled in the region 1861-1884 and hypothesised that the lack of regional variation within S\={a}moan entailed that they had long had a more centralised government \citep[172]{turner1884}\footnote{More on the particular case of S\={a}moa in chapter \ref{chapter_samoan_var}.}.
+Linguists, anthropologists and scholars of other fields have long remarked on the link between linguistic diversity and political structure in Remote Oceania. One of the oldest examples of this observation is Turner who travelled in the region 1861-1884 and hypothesised that the lack of regional variation within S\={a}moan entailed that they had long had a more centralised government \citep[172]{turner1884}.
 
 %\begin{quotation} 
 %\noindent \emph{To anyone acquainted with the aborigines of various parts of the world, and especially those of the Papuan groups in Western Polynesia [sic], the simple fact that S\={a}moans had but one dialect, and free intercourse with each other all over the group is proof positive that there must have long existed there some system of government.} \citep[172]{turner1884}\footnote{\citet[8]{moselhovdhaugen1992} in their reference grammar of Samoan also propose that the lack of regional diversity within the language is due to the extensive social networks and linking of different regions. More on this in chapter \ref{chapter_samoan_var}.} \end{quotation}
@@ -247,7 +259,7 @@ The SIL in their definition of language vs dialect also refer to ``intelligibili
 \begin{flushright}\citet{ethnologue2019lgident}\end{flushright}
 \end{quotation}
 
-The word lists used are most likely standardised lists of basic vocabulary similar to Swadesh-lists. The particular method of calculating lexical similarity is based on a standardised procedure by \citet{rensch1992calculating}. \citet[326]{swadesh1954perspectives} has suggested a cut-off of lexical similarity as 81\% instead for deeming two varieties to be of the same language. We return to these measurements of lexical similarity and their application to languages of Remote Oceania in section \ref{swadesh_networks_para} in the next chapter of this thesis.
+The word lists used are most likely standardised lists of basic vocabulary similar to Swadesh-lists. The particular method of calculating lexical similarity is based on a standardised procedure by \citet{rensch1992calculating}. \citet[326]{swadesh1954perspectives} has suggested a cut-off of lexical similarity as 81\% instead for deeming two varieties to be of the same language. 
 
 It is still unclear how intelligibility is defined and measured. Mutual intelligibility can vary with context and need not be symmetrical \citep[356]{NETTLE1998}. In their study of mutual intelligibility between pairs of different European languages, \citet{gooskens2017measuring} found that Dutch speakers had a higher than 85\% success rate at a spoken picture task in German\footnote{For more information on how this study took into account schooling and passive knowledge of the target language by their participants, please see \citet{gooskens2017measuring}.}. Their study involved many different kinds of tasks, and depending on which one was used certain language pairs would sometimes be considered as the same language by the ISO 639-3 criteria, and sometimes not.
 
@@ -322,13 +334,13 @@ The aim of this chapter is to explore the number of languages across islands of 
 \begin{figure}[H]
 \centering
     \begin{subfigure}{\textwidth}
-%    \includegraphics[width=\textwidth]{illustrations/plots_from_R/polygon_marck_group_map.png}
+    \includegraphics[width=\textwidth]{illustrations/plots_from_R/polygon_marck_group_map.png}
      \caption{Island and atolls grouped by overnight sailing distance (see main text for definition).}
 \label{marck_group_map}
     \end{subfigure}
 
     \begin{subfigure}{\textwidth}
-%\includegraphics[width=\textwidth]{illustrations/plots_from_R/polygon_medium_group_map.png}
+\includegraphics[width=\textwidth]{illustrations/plots_from_R/polygon_medium_group_map.png}
 \caption{Island and atolls grouped by shared language(s).}
 \label{medium_group_map}
     \end{subfigure}
@@ -336,7 +348,7 @@ The aim of this chapter is to explore the number of languages across islands of 
     \label{fig:island_groups}
     \end{figure}
     
-\citet{mark_1986, marck2000} uses 100 miles as an approximate limit of an overnight voyage in a traditional canoe, and infers that this most likely represents a reasonable distance which might be travelled regularly to stay in contact within a community (see section \ref{subregion:sailing}). If two islands are within 100 miles of each other, they are classified within the same overnight-distance group and covered by the same colour in Fig.~\ref{marck_group_map}. An example of this is that the southernmost island of the Solomons, the Santa Cruz islands of the Temotu province, is within overnight voyage distance of the northernmost islands of Vanuatu. This is why the islands of Vanuatu and Temotu are the same colour in Fig.~\ref{marck_group_map}. However, the two island chains of the Marshall Islands, Ratak and R\={a}lik are separated when islands are grouped by this principle despite sharing a common language and being one modern country. This is also the case for the eastern islands of the Tuamotu, with the Reao atoll being classified as a separate island group from the main islands of the Tuamotu archipelago. We will refer to these island groups as \textit{overnight distance groups}. 
+\citet{mark_1986, marck2000} uses 100 miles as an approximate limit of an overnight voyage in a traditional canoe, and infers that this most likely represents a reasonable distance which might be travelled regularly to stay in contact within a community. If two islands are within 100 miles of each other, they are classified within the same overnight-distance group and covered by the same colour in Fig.~\ref{marck_group_map}. An example of this is that the southernmost island of the Solomons, the Santa Cruz islands of the Temotu province, is within overnight voyage distance of the northernmost islands of Vanuatu. This is why the islands of Vanuatu and Temotu are the same colour in Fig.~\ref{marck_group_map}. However, the two island chains of the Marshall Islands, Ratak and R\={a}lik are separated when islands are grouped by this principle despite sharing a common language and being one modern country. This is also the case for the eastern islands of the Tuamotu, with the Reao atoll being classified as a separate island group from the main islands of the Tuamotu archipelago. We will refer to these island groups as \textit{overnight distance groups}. 
 
 If two islands share a language, they are classified as of the same island group in Fig.~\ref{medium_group_map}. For example, all islands of the Tuamotu archipelago (where Tuamotuan [tuam1242] is spoken) are coloured the same, even though they are grouped into several separate island groups by the overnight distance approach. Vanuatu, being a land of great language diversity, has a different colour for almost every island. Another example is the Tungaru islands (western islands of Kiribati) and Tuvalu which actually share a language. Most people of the country of Tuvalu speak Tuvaluan, but there is one island, Nui, where Tungaru (Gilbertese [gilb1244]) is also spoken \citep{faaniu1983tuvalu, macdonald_2020, omniglot_tuvaluan}. Therefore, they are coloured the same in Fig.~\ref{medium_group_map}. We will call these island groups \textit{shared language groups}.
 
@@ -358,7 +370,7 @@ This requires that we use a different kind of model than if the distribution had
 
 \begin{figure}[H]
 \centering
-%\includegraphics[width=13cm]{illustrations/plots_from_R/Lg_distrubition_medium_island_group_lg_merged.png}
+\includegraphics[width=13cm]{illustrations/plots_from_R/Lg_distrubition_medium_island_group_lg_merged.png}
 \caption{{Distribution of languages per shared language island group.}}
 \label{dist_lg_medium}
 \end{figure}
@@ -407,7 +419,7 @@ The possible values societies can take for this variable of political complexity
 \end{flushright}
 \end{quotation}
 
-This way of characterising political structure aligns well with ethnographic accounts of political structures in Western Polynesia, as we have for example seen in descriptions by \citet{sahlins63}. Consider Fig.~\ref{meleiseapyramid} \citep[22]{meleisea1995} for example, which illustrates the ideal characterisation of political power in S\={a}moa. The village level (\emph{matai} titles) corresponds to value 1 for EA033, subdistrict (\emph{ali'i} titles) level 2, district level (\emph{ali'i pa'ia / ao} titles) 3 and nation (\emph{tafa'if\={a} / tupu} titles) corresponds to level 4. S\={a}moa is however coded as level 3 since paramount titles are very unstable in the archipelago, even though they theoretically do exist (see section \ref{samoabackground}).
+This way of characterising political structure aligns well with ethnographic accounts of political structures in Western Polynesia, as we have for example seen in descriptions by \citet{sahlins63}. Consider Fig.~\ref{meleiseapyramid} \citep[22]{meleisea1995} for example, which illustrates the ideal characterisation of political power in S\={a}moa. The village level (\emph{matai} titles) corresponds to value 1 for EA033, subdistrict (\emph{ali'i} titles) level 2, district level (\emph{ali'i pa'ia / ao} titles) 3 and nation (\emph{tafa'if\={a} / tupu} titles) corresponds to level 4. S\={a}moa is however coded as level 3 since paramount titles are very unstable in the archipelago, even though they theoretically do exist.
 
 %\footnote{There exists some variation in the literature as to where to start this scale, either with 1 = no political authority beyond community, or 1 = missing data. We will be using the default scale in the Ethnographic Atlas Codebook from \citet{gray1998ethnographic} here and adjust quotes from other publications to this scale so as to reduce confusion.}
 
@@ -450,7 +462,7 @@ Fig.~\ref{pol_complex_map} represents the coding of political complexity for the
 
 \begin{sidewaysfigure}
 \centering
-%\includegraphics[width=19cm]{illustrations/plots_from_R/map_pol_complex.png}
+\includegraphics[width=19cm]{illustrations/plots_from_R/map_pol_complex.png}
 \caption[Map of Remote Oceania: Political complexity]{{Map of Remote Oceania with associated values for political complexity (EA033).}}
 \label{pol_complex_map}
 \end{sidewaysfigure}
@@ -472,7 +484,7 @@ For comparison across island groups, the oldest settlement order per group was u
 
 \begin{sidewaysfigure}
 \centering
-%\includegraphics[width=19cm]{illustrations/plots_from_R/Map_RO_dates.png}
+\includegraphics[width=19cm]{illustrations/plots_from_R/Map_RO_dates.png}
 \caption{{Map of island groups in Remote Oceania labelled with settlement order.}}
 \label{dates_map}
 \end{sidewaysfigure}
@@ -507,13 +519,14 @@ Our starting formula contains all variables discussed, as well as interactions b
 
 
 \begin{quotation}
-\textbf{Formula} \\
+\textbf{Formula} 
+
 \texttt{Number of languages \textasciitilde{} Latitude (absolute mean) + \\
 Rainfall seasonality (mean) \textasteriskcentered{}   Annual Rainfall (mean) + \\
 Temperature seasonality (mean) \textasteriskcentered{}   Annual temperature (mean)  + \\
 Political complexity (mean) + \\
 Isolation (log10) + \\ 
-Settlement order}\footnote{Settlement order was reversed from Fig. \ref{dates_map} such that high numbers represent further back in time and recent waves have a low number.}\texttt{\textasteriskcentered{} }  Shoreline (log10)+ \\
+Settlement order}\footnote{Settlement order was reversed from Fig. \ref{dates_map} such that high \\ numbers represent further back in time and recent waves have a low number.}\texttt{\textasteriskcentered{} }  Shoreline (log10)+ \\
 Settlement order \textasteriskcentered{}   Area (log10) \\ 
 Settlement order \textasteriskcentered{}  Ratio shoreline (log10) to Area (log10) \\
 \end{quotation}
@@ -566,13 +579,13 @@ Fig.~\ref{medium_model_predict} shows the actual observed language counts (red),
 \centering
     \begin{subfigure}{12cm}
 \centering
-%\includegraphics[width=\textwidth]{illustrations/plots_from_R/medium_group_model_prediction.png}
+\includegraphics[width=\textwidth]{illustrations/plots_from_R/medium_group_model_prediction.png}
 \caption{Untransformed values.}
     \end{subfigure}
 \hfil
     \begin{subfigure}{12cm}
 \centering
-%\includegraphics[width=\textwidth]{illustrations/plots_from_R/medium_group_model_prediction_log10.png}
+\includegraphics[width=\textwidth]{illustrations/plots_from_R/medium_group_model_prediction_log10.png}
 \caption{Values transformed log-10.}
     \end{subfigure}
     \caption[Model prediction for shared language island group.]{{Model prediction for shared language island groups. Red = observed language count, blue = prediction and bars = standard error.  \emph{n}= 65}}
@@ -618,13 +631,13 @@ Fig.~\ref{Marck_model_predict} illustrates the predictions of the model using ov
 \centering
     \begin{subfigure}{12cm}
 \centering
-%\includegraphics[width=\textwidth]{illustrations/plots_from_R/Marck_group_model_prediction.png}
+\includegraphics[width=\textwidth]{illustrations/plots_from_R/Marck_group_model_prediction.png}
 \caption{Untransformed values.}
     \end{subfigure}
 \hfil
     \begin{subfigure}{12cm}
 \centering
-%\includegraphics[width=\textwidth]{illustrations/plots_from_R/Marck_group_model_prediction_log10.png}
+\includegraphics[width=\textwidth]{illustrations/plots_from_R/Marck_group_model_prediction_log10.png}
 \caption{Values transformed log-10.}
     \end{subfigure}
 \caption[Model prediction for overnight distance island groups.]{{Model prediction for overnight distance island groups. Red = observed language count, blue = prediction and bars = standard error. \emph{n}= 58}}
@@ -661,7 +674,6 @@ Unlike the studies by \citet{gavin2012island}, \citet{hua2019ecological} and oth
 Possible limitations with this chapter are: a) the way that islands groups are defined, b) the manner in which the over-dispersion was accounted for and c) poor measurements of, or missing, key variables. Concerning (a), it may be that a grid-approach (c.f \citet{hua2019ecological}) is more appropriate. One of the problems with a grid approach is that it may work less well in an oceanic environment where connections between islands are not accounted for appropriately, but it should be tested in a similar manner to this chapter to evaluate if this indeed is a problem. A more finer grained approach similar to  \citet{gavin2012island} where each landmass is the unit of analysis may also be interesting. Both of these approaches may also aid with (b). There are other ways of accounting for (b), over-dispersion in data, besides a Negative Binomial distribution. For example, \citet[4-5]{gavin2012island} used the reciprocal of the language count. Regarding (c), \citet[4-5]{gavin2012island} found that Isolation was a significant variable in their models for predicting language diversity on Oceania (including Near Oceania). It is possible that the manner in which isolation was calculated here was suboptimal and that one or several of the other measurements of Isolation is more appropriate (see section \ref{sec:island_geo}). It was also not possible to include measurements of non-Austronesian contact in this chapter due to poor data coverage despite the fact that it could be a relevant factor (c.f. \citet{lipson_harvad_ancient_dna_vanuatu_2018, posth_jena_ancient_dna_vanuatu_2018}). 
  
 
-\newpage
 
 \subsection{Conclusions}
 This chapter investigated the hypothesis that besides time depth and environmental factors, the distribution of languages in Remote Oceania is also significantly influenced by interaction patterns that can be measured by political complexity (c.f. \citet{pawley81, pawley2007}). In order to test this hypothesis, data was gathered on rainfall, temperature, settlement date, shoreline, isolation, latitude, area, and political complexity for island groups in Remote Oceania (c.f. \citet{curriemace2009, gavin2012island, hua2019ecological} and \citet{Pacheco_Coelho_2019}). The hypothesis was tested using a Negative Binomial Generalised Linear Model and stepwise dropping variables given an ANOVA Chi-square test.
