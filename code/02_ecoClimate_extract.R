@@ -27,14 +27,13 @@ points_to_extract <- sp::SpatialPoints(pnts %>%
                                        proj4string = sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
 
 ## Do these points look right? Based on my limited knowledge of these island groups, looks ok to me?
-plot(clim_stack$bio_._CCSM_piControl.1760._bio1)
+plot(clim_stack$bio...CCSM_piControl.1760._bio11)
 plot(points_to_extract, add = TRUE)
 
 
 ## Extract climate data
 
 clim_dat <- raster::extract(clim_stack, points_to_extract)
-clim_dat
 
 ## Join it back to orginal data and save!!
 
@@ -42,29 +41,31 @@ all_dat <- pnts_all %>%
   dplyr::left_join(pnts %>%
                      dplyr::bind_cols(dplyr::as_tibble(clim_dat)))
 
+bio...CCSM_piControl.1760._bio1
+
 all_dat_grouped <-all_dat %>% 
   filter(!is.na(Smallest_Island_group)) %>% 
-  group_by(Smallest_Island_group) %>% 
-    summarise(mean_CCSM_piControl_1760_bio1 = mean(bio_._CCSM_piControl.1760._bio1),
-              mean_CCSM_piControl_1760_bio2 = mean(bio_._CCSM_piControl.1760._bio2),
-              mean_CCSM_piControl_1760_bio3 = mean(bio_._CCSM_piControl.1760._bio3),
-              mean_CCSM_piControl_1760_bio4 = mean(bio_._CCSM_piControl.1760._bio4),
-              mean_CCSM_piControl_1760_bio5 = mean(bio_._CCSM_piControl.1760._bio5),
-              mean_CCSM_piControl_1760_bio6 = mean(bio_._CCSM_piControl.1760._bio6),
-              mean_CCSM_piControl_1760_bio7 = mean(bio_._CCSM_piControl.1760._bio7),
-              mean_CCSM_piControl_1760_bio8 = mean(bio_._CCSM_piControl.1760._bio8),
-              mean_CCSM_piControl_1760_bio9 = mean(bio_._CCSM_piControl.1760._bio9),
-              mean_CCSM_piControl_1760_bio10 = mean(bio_._CCSM_piControl.1760._bio10),
-              mean_CCSM_piControl_1760_bio11 = mean(bio_._CCSM_piControl.1760._bio11),
-              mean_CCSM_piControl_1760_bio12 = mean(bio_._CCSM_piControl.1760._bio12),
-              mean_CCSM_piControl_1760_bio13 = mean(bio_._CCSM_piControl.1760._bio13),
-              mean_CCSM_piControl_1760_bio14 = mean(bio_._CCSM_piControl.1760._bio14),
-              mean_CCSM_piControl_1760_bio15 = mean(bio_._CCSM_piControl.1760._bio15),
-              mean_CCSM_piControl_1760_bio16 = mean(bio_._CCSM_piControl.1760._bio16),
-              mean_CCSM_piControl_1760_bio17 = mean(bio_._CCSM_piControl.1760._bio17),
-              mean_CCSM_piControl_1760_bio18 = mean(bio_._CCSM_piControl.1760._bio18),
-              mean_CCSM_piControl_1760_bio19 = mean(bio_._CCSM_piControl.1760._bio19)
+  group_by(Smallest_Island_group) %>%
+    summarise(mean_CCSM_piControl_1760_bio1 = mean(bio...CCSM_piControl.1760._bio1),
+              mean_CCSM_piControl_1760_bio2 = mean(bio...CCSM_piControl.1760._bio2),
+              mean_CCSM_piControl_1760_bio3 = mean(bio...CCSM_piControl.1760._bio3),
+              mean_CCSM_piControl_1760_bio4 = mean(bio...CCSM_piControl.1760._bio4),
+              mean_CCSM_piControl_1760_bio5 = mean(bio...CCSM_piControl.1760._bio5),
+              mean_CCSM_piControl_1760_bio6 = mean(bio...CCSM_piControl.1760._bio6),
+              mean_CCSM_piControl_1760_bio7 = mean(bio...CCSM_piControl.1760._bio7),
+              mean_CCSM_piControl_1760_bio8 = mean(bio...CCSM_piControl.1760._bio8),
+              mean_CCSM_piControl_1760_bio9 = mean(bio...CCSM_piControl.1760._bio9),
+              mean_CCSM_piControl_1760_bio10 = mean(bio...CCSM_piControl.1760._bio10),
+              mean_CCSM_piControl_1760_bio11 = mean(bio...CCSM_piControl.1760._bio11),
+              mean_CCSM_piControl_1760_bio12 = mean(bio...CCSM_piControl.1760._bio12),
+              mean_CCSM_piControl_1760_bio13 = mean(bio...CCSM_piControl.1760._bio13),
+              mean_CCSM_piControl_1760_bio14 = mean(bio...CCSM_piControl.1760._bio14),
+              mean_CCSM_piControl_1760_bio15 = mean(bio...CCSM_piControl.1760._bio15),
+              mean_CCSM_piControl_1760_bio16 = mean(bio...CCSM_piControl.1760._bio16),
+              mean_CCSM_piControl_1760_bio17 = mean(bio...CCSM_piControl.1760._bio17),
+              mean_CCSM_piControl_1760_bio18 = mean(bio...CCSM_piControl.1760._bio18),
+              mean_CCSM_piControl_1760_bio19 = mean(bio...CCSM_piControl.1760._bio19)
               )
   
 
-write_tsv(all_dat_grouped, "output/sheets/RO_polygons_grouped_with_languages_with_climate_grouped.tsv")
+write_tsv(all_dat_grouped, "output/processed_data/RO_polygons_grouped_with_languages_with_climate_grouped.tsv")
