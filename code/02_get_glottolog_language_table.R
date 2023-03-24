@@ -24,10 +24,9 @@ unlink(old_fn, recursive = T)
 
 #finding the filenames for the two tables we are intersted in, the language and value tables. The specific filenames can vary, so instead of identifying them via the filename we should check which of the tables conform to particular CLDF-standards and then take the filenames for the tables that conform to those standards fromt the meta-datajson.
 
-glottolog_cldf_github_folder <- paste0(new_fn, "/cldf/")
+glottolog_cldf_fn <- paste0(new_fn, "/cldf/")
 
-
-glottolog_cldf_json <- jsonlite::read_json(paste0(glottolog_cldf_github_folder, "cldf-metadata.json"))
+glottolog_cldf_json <- jsonlite::read_json(paste0(glottolog_cldf_fn, "cldf-metadata.json"))
 
 #finding the fileanme for the relevant tables by checking which of the tables entered into the json meta data file conforms to a given cldf-standard and pulling the filename from there
 
@@ -76,12 +75,6 @@ languages <- readr::read_csv(languages_csv_url, na = c("","<NA>"), col_types = c
 glottolog_language_table_wide_df <- dplyr::full_join(values,languages, by = "Language_ID") %>% 
   mutate(Language_level_ID = ifelse(level == "language", Language_ID, Language_level_ID))
 
-write_tsv(glottolog_language_table_wide_df, "data/glottolog_language_table_wide_df.tsv")
+write_tsv(glottolog_language_table_wide_df, "output/processed_data/glottolog_language_table_wide_df.tsv")
 
 cat("glottolog-cldf table created.\n")
-
-#Making a list of language-leveled oceanic languages for glottolog tree for viz
-glottolog_language_table_wide_df %>% 
-  filter(str_detect(classification, "ocea1241")) %>% 
-  filter(level =="language") %>% 
-  write_tsv( "data/glottolog_oceanic_languages_df.tsv")
