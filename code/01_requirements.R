@@ -1,77 +1,35 @@
 # Please run this script first to make sure you have all the necessary packages 
 # installed for running the rest of the scripts in this R project
 
-if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacman") }
+source("fun_def_h_load.R")
 
-pacman::p_load(
-  tidyverse,
-  missForest,
-  reshape2,
-  modEvA,
-  MuMIn,
-  rsq,
-  cluster,
-  viridis,
-  rlang,
-  Amelia,
-  readODS,
-  devtools,
-  matrixcalc,
-  forcats,
-  knitr, 
-  lazyeval,
-  gplots,
-  igraph,
-  geosphere,
-  diagram,
-  foreign, 
-  MASS, 
-  colorspace,
-  RColorBrewer,
-  wesanderson,
-  randomcoloR,
-  ggplot2,
-  ggthemes,
-  tidytree ,
-  sandwich, 
-  msm,
-  readxl,
-  glue,
-  broom, 
-  pscl,
-  ggrepel,
-  ggpubr,
-  cowplot,
-  fuzzyjoin,
-  infotheo,
-  rlist,
-  data.table,
-  #making maps
-  mapdata,
-  maptools,
-  maps,
-  mapproj,
-  ggmap,
-  qgraph,
-  glue,
-  stringi,
-  Rarity,
-  ape, 
-  castor,
-  naniar, 
-  fields,
-  adephylo,
-  phytools,
-  diversitree,
-  phylobase, 
-  phangorn, 
-  treeman, 
-  devtools,
-  xtable,
-  broom, 
-  sp, 
-  raster, 
-  scales
+h_load(pkg = c(
+  "tidyverse",
+  "reshape2",
+  "modEvA",
+  "MuMIn",
+  "rsq",
+  "viridis",
+  "rlang",
+  "readODS",
+  "devtools",
+  "MASS", 
+  "colorspace",
+  "wesanderson",
+  "randomcoloR",
+  "ggplot2",
+  "ggthemes",
+  "readxl",
+  "broom", 
+  "ggpubr",
+  "data.table",
+  "naniar", 
+  "fields",
+  "devtools",
+  "xtable",
+  "broom", 
+  "sp", 
+  "raster"), verbose = F, dependencies = T
 )
 
 unlist_entire_df <- function(data) {
@@ -84,3 +42,10 @@ unlist_entire_df <- function(data) {
 
 #quieting down tidyverse
 options(tidyverse.quiet = TRUE)
+
+#set-up some output dirs
+dir <- "output"
+if(!dir.exists(dir)){dir.create(dir)}
+
+dir <- "output/processed_data"
+if(!dir.exists(dir)){dir.create(dir)}
