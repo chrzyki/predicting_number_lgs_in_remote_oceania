@@ -1,24 +1,24 @@
 source("01_requirements.R")
+
+#script written by Russell Dinnage (ORCID= 0000-0003-0846-2819), with smaller tweaks by Hedvig Skirgård
+
 #### extracting ecoClimate data for points ####
 
 #### Load Points ####
-pnts_all <- readr::read_csv("data/RO_polygons_grouped_with_languages.csv")
+pnts_all <- readr::read_csv("data/RO_polygons_grouped_with_languages.csv", show_col_types = F)
 
 pnts <- pnts_all %>%
   dplyr::filter(!is.na(Smallest_Island_group))
 
 #### Read rasters into RasterStack ####
-raster_files <- list.files("data/ecoClimate/bio # CCSM_piControl(1760)/", full.names = TRUE) ## list files
-raster_files <- raster_files[grep("\\.bil$", raster_files)] ## get only the .bil files
+raster_files <- list.files("data/ecoClimate/bio # CCSM_piControl(1760)/", full.names = TRUE, pattern = "\\.bil$") ## list files
 
 clim_stack <- raster::stack(raster_files) ## read rasters into single RasterStack
-plot(clim_stack$bio_._CCSM_piControl.1760._bio1) ## plot it! Looks good!
-sp::proj4string(clim_stack) ## projection?
-clim_stack
+plot(clim_stack$bio...CCSM_piControl.1760._bio1) ## plot it! Looks good!
 
 ## rasters have no projection but looks like standard longlat WGS84
 raster::crs(clim_stack) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
-plot(clim_stack$bio_._CCSM_piControl.1760._bio1)
+plot(clim_stack$bio...CCSM_piControl.1760._bio12)
 
 ## make sure there are no projection issue by making a SpatialPoints object with same projection
 points_to_extract <- sp::SpatialPoints(pnts %>%
