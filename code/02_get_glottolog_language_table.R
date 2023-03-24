@@ -1,12 +1,31 @@
 #This script takes the values and languages tables from a cldf-release and combines then and transforms them to a wide data format from a long. It does not take into account the parameter or code tables.
-
 source("01_requirements.R")
+options(timeout=300)
+
+#fetching glottolog from zenodo
+
+#setting up a tempfile path where we can put the zipped files before unzipped to a specific location
+filepath <- file.path(tempfile())
+
+glottolog_fn <- c("https://zenodo.org/record/7398887/files/glottolog/glottolog-cldf-v4.7.zip")
+
+utils::download.file(file.path(glottolog_fn), destfile = filepath)
+utils::unzip(zipfile = filepath, exdir = "glottolog-cldf")
+
+#Zenodo locations contain a dir with the name of the repos and the commit in the release. This is not convenient for later scripts, so we move the contents up one level
+old_fn <- list.dirs("glottolog-cldf", recursive = F)
+old_fn_files <- list.files(old_fn)
+new_fn <- "glottolog-cldf"
+
+file.copy(from = paste0(old_fn,"/", old_fn_files),to = new_fn, recursive = T, overwrite = T)
+#remove old dir
+unlink(old_fn, recursive = T)
+
 
 #finding the filenames for the two tables we are intersted in, the language and value tables. The specific filenames can vary, so instead of identifying them via the filename we should check which of the tables conform to particular CLDF-standards and then take the filenames for the tables that conform to those standards fromt the meta-datajson.
 
-config_json <- jsonlite::read_json("config.json")
+glottolog_cldf_github_folder <- paste0(new_fn, "/cldf/")
 
-glottolog_cldf_github_folder <- paste0(config_json$data_sources$glottolog_cldf$location, "/cldf/")
 
 glottolog_cldf_json <- jsonlite::read_json(paste0(glottolog_cldf_github_folder, "cldf-metadata.json"))
 
