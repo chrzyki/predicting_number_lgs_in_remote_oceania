@@ -1,6 +1,6 @@
 source("01_requirements.R")
 
-polygon_geo <- read_csv("data/RO_polygons_grouped_with_languages.csv") %>% 
+polygon_geo <- read_csv("data/RO_polygons_grouped_with_languages.csv", show_col_types = F) %>% 
   filter(!is.na(Inhabited)) %>% 
   filter(Unique_ID != "11356") %>% #removing the huge islands of new guinea and new zealand, since the centroid is in the middle it doesn't make sense for calculating distances 
   filter(Unique_ID != "4444") %>% 
@@ -37,7 +37,7 @@ atDist_melted <- atDist %>%
   reshape2::melt()
 
 atDist_melted %>% 
-  write_rds("output/isolation/RO_geo_dist_atDist_melted.rds")
+  write_rds("output/processed_data/isolation_RO_geo_dist_atDist_melted.rds")
 
 dist_list_left_side <- polygon_geo %>% 
    dplyr::select(Unique_ID_left = Unique_ID, coastline_left= `COASTLINE (km) (perimeter)`, Smallest_Island_group_left = Smallest_Island_group, Medium_only_merged_for_shared_language_left = Medium_only_merged_for_shared_language, Marck_group_left = Marck_group)
@@ -54,7 +54,7 @@ atDist_melted_sided <-  atDist_melted %>%
   filter(Smallest_Island_group_left != Smallest_Island_group_right)
 
 atDist_melted_sided %>% 
-  write_rds("output/isolation/RO_geo_dist_atDist_melted_sided.rds")
+    write_rds("output/processed_data/isolation_RO_geo_dist_atDist_melted_sided.rds")
 
 ####Medium_group
 
