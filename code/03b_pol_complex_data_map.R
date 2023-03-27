@@ -105,17 +105,18 @@ ggsave("output/plots/maps/map_pol_complex.png", width = 9, height = 6)
 ggsave("../latex/illustrations/plots_from_R/plots_from_R/map_pol_complex.png", width = 9, height = 6)
 
 #dates
-dates <- read_xlsx("data/Remote_Oceania_Political_complex_and_more/island_group_settlement_date.xlsx") %>% 
+dates <- read_xlsx("data/island_group_settlement_date.xlsx") %>% 
   rename(settlement_date_grouping_finer = "Time depth settlement group", Smallest_Island_group = `Smaller specific island group`, `Settlement date oldest date` = `Oldest date`) %>% 
   dplyr::select(Smallest_Island_group, settlement_date_grouping_finer, `Settlement date oldest date`) %>% 
-  full_join(All_polygons) %>% 
+  full_join(All_polygons, by = "Smallest_Island_group"  ) %>% 
   filter(!is.na(Smallest_Island_group)) %>% 
   filter(!is.na(settlement_date_grouping_finer))
 
 dates_labels <- dates %>% 
   group_by(Marck_group, settlement_date_grouping_finer) %>% 
   summarise(Longitude = mean(Longitude), 
-            Latitude = mean(Latitude))
+            Latitude = mean(Latitude), 
+            .groups = "drop")
 
 basemap + 
   geom_point(data = dates, aes(x=Longitude, y=Latitude, colour = settlement_date_grouping_finer), size = 0.5, alpha = 0.8) +
