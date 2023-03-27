@@ -293,7 +293,7 @@ Island_group_summarised_Marck_group <- Island_group_all_sep %>%
   left_join(isolation_marck, by = "Marck_group") %>% 
   mutate(ratio_coastline_to_area = sum_shoreline / sum_area)
 
-write_tsv(Island_group_summarised_Marck_group, "output/processed_data//RO_Hedvig_aggregate_marck_group.tsv")
+write_tsv(Island_group_summarised_Marck_group, "output/processed_data/RO_Hedvig_aggregate_marck_group.tsv")
 
 Island_group_summarised_Marck_group$Marck_group <- fct_reorder(Island_group_summarised_Marck_group$Marck_group, Island_group_summarised_Marck_group$lg_count)
 
