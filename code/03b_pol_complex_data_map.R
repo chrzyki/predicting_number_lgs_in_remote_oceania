@@ -1,40 +1,40 @@
 source("01_requirements.R")
 
-#worldmaps
-#rendering a worldmap that is pacific centered
-world <- map_data('world', wrap=c(-25,335), ylim=c(-56,80), margin=T)
-
-lakes <- map_data("lakes", wrap=c(-25,335), col="white", border="gray", ylim=c(-55,65), margin=T)
-
 #read in
 glottolog <- read_tsv("output/processed_data/glottolog_language_table_wide_df.tsv", show_col_types = F)  %>% 
   mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude)) 
 
-polygon_grouping_hierachy <- read_tsv("output/sheets/Polygon_hierarchy_stats.tsv")
+polygon_grouping_hierachy <- read_tsv("output/processed_data/Polygon_hierarchy_stats.tsv", show_col_types = F)
   
 #shifting the longlat of the dataframe to match the pacific centered map
-All_polygons <- read_csv("data/Remote_Oceania_Political_complex_and_more/RO_polygons_grouped_with_languages.csv") %>% 
+All_polygons <- read_csv("data/RO_polygons_grouped_with_languages.csv", show_col_types = F) %>% 
   mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude)) %>% 
   mutate(area = as.numeric(`AREA (sq km)`)) %>% 
   arrange(area) %>% 
-  full_join(polygon_grouping_hierachy) %>% 
+  full_join(polygon_grouping_hierachy, by = c("Melanesia_or_not", "Marck_group", "glottocodes", "Smallest_Island_group",  "Medium_only_merged_for_shared_language")) %>% 
   filter(!is.na(glottocodes)) %>% 
   mutate(glottocodes = str_split(glottocodes, ",")) %>%
   unnest(glottocodes) %>% 
   mutate(glottocode = trimws(glottocodes)) %>% 
   distinct() 
 
-
 #Basemap
+
+#worldmaps
+#rendering a worldmap that is pacific centered
+world <- map_data('world', wrap=c(-25,335), ylim=c(-56,80), margin=T)
+
+lakes <- map_data("lakes", wrap=c(-25,335), col="white", border="gray", ylim=c(-55,65), margin=T)
+
 basemap <- ggplot(All_polygons) +
   geom_polygon(data=world, aes(x=long, 
                                y=lat,group=group),
                colour="gray87", 
-               fill="gray87", size = 0.5) +
+               fill="gray87", linewidth = 0.5) +
   geom_polygon(data=lakes, aes(x=long, 
                                y=lat,group=group),
                colour="gray87", 
-               fill="white", size = 0.3)  + 
+               fill="white", linewidth = 0.3)  + 
   theme(legend.position="none",
         panel.grid.major = element_blank(), #all of these lines are just removing default things like grid lines, axises etc
         panel.grid.minor = element_blank(),
@@ -59,7 +59,6 @@ Map_plot_all_polygons <- basemap +
 plot(Map_plot_all_polygons)
 ggsave("output/plots/maps/Map_RO_Smallest.png", width = 5, height = 4)
 
-
 ##Marck grouping
 Map_plot_marck <- basemap + 
   geom_point(aes(x=Longitude, y=Latitude), color = All_polygons$Marck_group_color, size = 0.5) #+
@@ -67,7 +66,7 @@ Map_plot_marck <- basemap +
 
 plot(Map_plot_marck)
 ggsave("output/plots/maps/Map_RO_Marck.png", width = 5, height = 4)
-ggsave("../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/polygon_marck_group_map.png", width = 5, height = 3)
+ggsave("../latex/illustrations/plots_from_R/plots_from_R/polygon_marck_group_map.png", width = 5, height = 3)
 
 ##Medium_group
 Map_plot_medium <- basemap + 
@@ -76,34 +75,34 @@ Map_plot_medium <- basemap +
 
 plot(Map_plot_medium)
 ggsave("output/plots/maps/Map_RO_Medium.png", width = 5, height = 4)
-ggsave("../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/polygon_medium_group_map.png", width = 5, height =3)
+ggsave("../latex/illustrations/plots_from_R/plots_from_R/polygon_medium_group_map.png", width = 5, height =3)
 
 
 #pol_complex
 col_vector_3 <- c("#91bfdb", "#ffffbf", "#fc8d59", "#d7191c")
 
-pol_complex_data <- read_csv("data/Remote_Oceania_Political_complex_and_more/Remote_oceania_pol_complex_hedvig_code.csv") %>% 
-  filter(!is.na(pol_complex_code_Hedvig)) %>% 
-  mutate(glottocode = Glottocode_spec) %>% 
-  mutate(`Political complexity (EA033)` = as.character(pol_complex_code_Hedvig)) %>% 
-  left_join(All_polygons) %>% 
+pol_complex_data <- readODS::read_ods("data/Remote_oceania_pol_complex_hedvig_code_latex.ods", sheet = 1) %>% 
+  dplyr::select(Language_level_ID = glottocode, `Political complexity (EA033)`) %>% 
+  mutate(glottocode = ifelse(Language_level_ID == "fiji1243", "kada1285,sout2864,nort2843", Language_level_ID)) %>% 
+  mutate(glottocode = ifelse(Language_level_ID == "aust1304",  "raiv1237,tubu1240,ruru1237,rima1237", glottocode)) %>% 
+  mutate(glottocode = ifelse(Language_level_ID == "maor1246", "maor1246,mori1267", glottocode)) %>% 
+  mutate(glottocode = str_split(glottocode, ",")) %>% 
+  unnest(cols = c(glottocode)) %>% 
+  dplyr::select(glottocode , `Political complexity (EA033)`) %>% 
+  filter(!is.na(`Political complexity (EA033)`)) %>% 
+  mutate(`Political complexity (EA033)` = as.character(`Political complexity (EA033)`)) %>% 
+  left_join(All_polygons, by = "glottocode") %>% 
     group_by(`Political complexity (EA033)`, glottocode) %>% 
-    summarise(Latitude = mean(Latitude),
-              Longitude = mean(Longitude)) 
-
-#pol_complex_data_labels <- pol_complex_data %>% 
-#  group_by(Marck_group, `Political complexity (EA033)`) %>% 
-#  summarise(Latitude = mean(Latitude),
-#            Longitude = mean(Longitude))
+    summarise(Latitude = mean(Latitude, na.rm = T),
+              Longitude = mean(Longitude, na.rm = T), .groups = "drop") 
 
 basemap + 
   geom_jitter(data = pol_complex_data, aes(x=Longitude, y=Latitude, fill = `Political complexity (EA033)`), size = 2, alpha = 0.8, shape = 21, stroke = 0.4, width = 0.5) +
   scale_fill_manual(values = col_vector_3) +
-  theme(legend.position = "bottom") #+
-#  geom_label_repel(data = pol_complex_data_labels, aes(x=Longitude, y=Latitude, label = `Political complexity (EA033)`, fill = `EA033 code`), size = 2, label.padding = unit(0.1, "lines"), position = "jitter") 
+  theme(legend.position = "bottom") 
   
 ggsave("output/plots/maps/map_pol_complex.png", width = 9, height = 6)
-ggsave("../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/map_pol_complex.png", width = 9, height = 6)
+ggsave("../latex/illustrations/plots_from_R/plots_from_R/map_pol_complex.png", width = 9, height = 6)
 
 #dates
 dates <- read_xlsx("data/Remote_Oceania_Political_complex_and_more/island_group_settlement_date.xlsx") %>% 
