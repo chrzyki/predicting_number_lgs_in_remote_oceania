@@ -1,4 +1,4 @@
-source("requirements.R")
+source("01_requirements.R")
 
 #worldmaps
 #rendering a worldmap that is pacific centered
@@ -7,9 +7,8 @@ world <- map_data('world', wrap=c(-25,335), ylim=c(-56,80), margin=T)
 lakes <- map_data("lakes", wrap=c(-25,335), col="white", border="gray", ylim=c(-55,65), margin=T)
 
 #read in
-glottolog <- read_tsv("../Glottolog_look_up_table/Glottolog_lookup_table_Hedvig_output/Glottolog_lookup_table_Heti_edition.tsv")  %>% 
+glottolog <- read_tsv("output/processed_data/glottolog_language_table_wide_df.tsv", show_col_types = F)  %>% 
   mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude)) 
-
 
 polygon_grouping_hierachy <- read_tsv("output/sheets/Polygon_hierarchy_stats.tsv")
   
