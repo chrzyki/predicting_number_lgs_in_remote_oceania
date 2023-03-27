@@ -44,14 +44,51 @@ basemap <- ggplot(glottolog_lat_long_shifted) +
 ##Per Marck_group
 
 Marck_groups <- read_tsv("output/processed_data/RO_Hedvig_aggregate_marck_group.tsv", show_col_types = F) %>% 
-  dplyr::select(Marck_group, color) %>% 
+  dplyr::select(Marck_group, color, lg_count) %>% 
   full_join(Polygon_lgs_glottocodes_sep, by = "Marck_group")
 
 
 basemap + 
-  geom_point(data = Marck_groups, size = 1.5, aes(x=Longitude, y=Latitude),
-              shape = 19, stroke = 0, color = Marck_groups$color, inherit.aes = F) +
+  geom_point(data = Marck_groups, size = 1.5, aes(x=Longitude, y=Latitude, fill = log10(lg_count)),
+              shape = 21, 
+             color = Marck_groups$color, 
+             inherit.aes = F) +
   theme(legend.position = "None") 
+
+h_load("ggalt")
+
+mean_var_long_lat_df <-  Marck_groups %>% 
+  group_by(Marck_group) %>%
+  summarise(var_latitude = var(Latitude, na.rm = T),
+            var_longitude = var(Longitude, na.rm = T), 
+            .groups = "drop") %>% 
+  summarise(mean_var_latitude = mean(var_latitude, na.rm = T),
+            mean_var_longitude = mean(var_longitude, na.rm = T))
+  
+two_few_points_df <- Marck_groups %>% 
+  group_by(Marck_group) %>% 
+  summarise(n = n()) %>% 
+  filter(n < 3)
+
+
+Marck_groups_subset <- Marck_groups %>% 
+  filter(Marck_group == "Kosrae")
+
+
+basemap + 
+  geom_encircle(data = Marck_groups_subset, mapping = aes(x=Longitude, y=Latitude, color = Marck_group), 
+                expand = 0, 
+                s_shape = 0)  
+
+
+
+
+  geom_point(data = Marck_groups_subset, size = 1.5, aes(x=Longitude, y=Latitude, fill = log10(lg_count)),
+             shape = 21, 
+          #   color = Marck_groups$color, 
+             inherit.aes = F) +
+  theme(legend.position = "None") 
+
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
 
