@@ -1,11 +1,9 @@
 source("01_requirements.R")
 
 Polygon_lgs_glottocodes_sep <- read_csv("data/RO_polygons_grouped_with_languages.csv", show_col_types = F) %>% 
-  filter(!is.na(glottocodes)) %>% 
-  mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude)) %>% 
-  mutate(glottocodes = str_split(glottocodes, ",")) %>%
-  unnest(glottocodes) %>% 
-  mutate(glottocode = trimws(glottocodes)) 
+  dplyr::select(Marck_group, Medium_only_merged_for_shared_language, Longitude, Latitude) %>% 
+  mutate(Longitude = if_else(Longitude <= -25, Longitude + 360, Longitude))
+
 
 #read in glottolog
 glottolog_lat_long_shifted <- read_tsv("data/glottolog_language_table_wide_df.tsv", show_col_types = F)  %>% 
@@ -45,50 +43,52 @@ basemap <- ggplot(glottolog_lat_long_shifted) +
 
 Marck_groups <- read_tsv("output/processed_data/RO_Hedvig_aggregate_marck_group.tsv", show_col_types = F) %>% 
   dplyr::select(Marck_group, color, lg_count) %>% 
-  full_join(Polygon_lgs_glottocodes_sep, by = "Marck_group")
+  full_join(Polygon_lgs_glottocodes_sep, by = "Marck_group") %>% 
+  filter(!is.na(lg_count)) %>% 
+  filter(!is.na(Marck_group))
 
+color_vec_marck <- unique(Marck_groups$color)
 
-basemap + 
-  geom_point(data = Marck_groups, size = 1.5, aes(x=Longitude, y=Latitude, fill = log10(lg_count)),
-              shape = 21, 
-             color = Marck_groups$color, 
-             inherit.aes = F) +
-  theme(legend.position = "None") 
-
-h_load("ggalt")
-
-mean_var_long_lat_df <-  Marck_groups %>% 
-  group_by(Marck_group) %>%
-  summarise(var_latitude = var(Latitude, na.rm = T),
-            var_longitude = var(Longitude, na.rm = T), 
-            .groups = "drop") %>% 
-  summarise(mean_var_latitude = mean(var_latitude, na.rm = T),
-            mean_var_longitude = mean(var_longitude, na.rm = T))
-  
-two_few_points_df <- Marck_groups %>% 
+#ggalt::geom_encircle cannot handle groups with 1 or 3 members. So for those island groups, we're adding rows with points that are super-near
+groups_two_few_points <- Marck_groups %>% 
   group_by(Marck_group) %>% 
   summarise(n = n()) %>% 
   filter(n < 3)
 
+Marck_groups_too_few_points_df<- Marck_groups %>% 
+  filter(Marck_group %in% groups_two_few_points$Marck_group)
 
-Marck_groups_subset <- Marck_groups %>% 
-  filter(Marck_group == "Kosrae")
+Marck_groups_too_few_points_df_minus <- Marck_groups %>% 
+  mutate(Longitude = Longitude - 0.05, 
+         Latitude = Latitude - 0.05)
 
+Marck_groups_too_few_points_df_plus <- Marck_groups %>% 
+  mutate(Longitude = Longitude + 0.05, 
+         Latitude = Latitude + 0.05)
+
+Marck_groups_for_encircle_plotting_df <- Marck_groups %>% 
+  rbind(Marck_groups_too_few_points_df_minus) %>% 
+  rbind(Marck_groups_too_few_points_df_plus)
+
+#label df with lg_count
+Marck_groups_for_encircle_plotting_df_labels <- Marck_groups_for_encircle_plotting_df %>% 
+  group_by(Marck_group, lg_count) %>% 
+  summarise(mean_lat = mean(Latitude, na.rm = T),
+            mean_long = mean(Longitude, na.rm = T),
+            .groups = "drop")
 
 basemap + 
-  geom_encircle(data = Marck_groups_subset, mapping = aes(x=Longitude, y=Latitude, color = Marck_group), 
-                expand = 0, 
-                s_shape = 0)  
-
-
-
-
-  geom_point(data = Marck_groups_subset, size = 1.5, aes(x=Longitude, y=Latitude, fill = log10(lg_count)),
-             shape = 21, 
-          #   color = Marck_groups$color, 
-             inherit.aes = F) +
-  theme(legend.position = "None") 
-
+  geom_encircle(data = Marck_groups_for_encircle_plotting_df, mapping = aes(x=Longitude, y=Latitude, color = Marck_group), size = 3,
+                expand = 0.005, 
+                s_shape = 1)  +
+  geom_label(data = Marck_groups_for_encircle_plotting_df_labels, mapping =aes(x = mean_long, 
+                                                                               y = mean_lat,
+                                                                               label = lg_count, 
+                                                                               size = 0.01, 
+                                                                               color = Marck_group),
+             label.padding = unit(0.2, "lines"))+
+  theme(legend.position = "None") +
+  scale_color_manual(values = color_vec_marck)
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
 
@@ -98,15 +98,5 @@ medium_groups <- read_tsv("output/processed_data/RO_Hedvig_aggregate_medium_isla
   dplyr::select(Medium_only_merged_for_shared_language, color) %>% 
   full_join(Polygon_lgs_glottocodes_sep, by = "Medium_only_merged_for_shared_language")
 
-medium_groups_labels <- read_tsv("output/processed_data/RO_Hedvig_aggregate_medium_island.tsv", show_col_types = F) %>% 
-  mutate(mean_long = if_else(mean_long <= -25, mean_long + 360, mean_long)) %>% 
-  group_by(Medium_only_merged_for_shared_language) %>% 
-  summarise(mean_long = mean(mean_long),
-            mean_lat = mean(mean_lat))
 
-basemap + 
-  geom_jitter(data = medium_groups, size = 1.5, aes(x=Longitude, y=Latitude),
-              shape = 19, stroke = 0, color = medium_groups$color) +
-  theme(legend.position = "None") 
-
-ggsave("output/plots/polygon_medium_group_map.png", width = 15, height = 8)
+#ggsave("output/plots/polygon_medium_group_map.png", width = 15, height = 8)
