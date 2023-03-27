@@ -112,6 +112,20 @@ dates <- read_xlsx("data/island_group_settlement_date.xlsx") %>%
   filter(!is.na(Smallest_Island_group)) %>% 
   filter(!is.na(settlement_date_grouping_finer))
 
+
+dates_summarised_for_Sm <- read_xlsx("data/island_group_settlement_date.xlsx") %>%
+  rename(settlement_date_grouping_finer = "Time depth settlement group", Smallest_Island_group = `Smaller specific island group`, `Settlement date oldest date` = `Oldest date`) %>% 
+  group_by(`Name in source`) %>% 
+  summarise(`Date ranges` = unique(`Date ranges`),
+            Source = unique(Source),
+            settlement_date_grouping_finer = unique(settlement_date_grouping_finer),
+            Meta_source = unique(Meta_source),
+            `Based on inference from neighbouring island?` = unique(`Based on inference from neighbouring island?`),
+            Island_groups = paste0(Smallest_Island_group, collapse = ", "))
+  
+  
+
+
 dates_labels <- dates %>% 
   group_by(Marck_group, settlement_date_grouping_finer) %>% 
   summarise(Longitude = mean(Longitude), 
@@ -128,7 +142,7 @@ basemap +
   scale_color_viridis() 
 
 
-ggsave("output/plots/maps/Map_RO_dates.png", width = 9, height = 6)
-ggsave("../../Hedvigs_academia/Hedvigs PhD thesis/tex/illustrations/plots_from_R/Map_RO_dates.png", width = 9, height = 6)
+ggsave("output/plots/Map_RO_dates.png", width = 9, height = 6)
+ggsave("../latex/illustrations/plots_from_R/Map_RO_dates.png", width = 9, height = 6)
 
 
