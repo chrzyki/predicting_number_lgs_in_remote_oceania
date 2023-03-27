@@ -16,6 +16,7 @@ h_load(pkg = c(
   "MASS", 
   "colorspace",
   "wesanderson",
+  "ggalt",
   "randomcoloR",
   "ggplot2",
   "ggthemes",
