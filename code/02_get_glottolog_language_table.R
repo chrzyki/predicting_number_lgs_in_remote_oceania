@@ -2,6 +2,10 @@
 source("01_requirements.R")
 options(timeout=300)
 
+if(dir.exists(paths = "data/git_submodules/glottolog-cldf/cldf/")){
+  cat(paste0("glottolog-cldf already downloaded, skipping fetching it anew."))
+  }else{
+
 #fetching glottolog from zenodo
 
 #setting up a tempfile path where we can put the zipped files before unzipped to a specific location
@@ -10,17 +14,17 @@ filepath <- file.path(tempfile())
 glottolog_fn <- c("https://zenodo.org/record/7398887/files/glottolog/glottolog-cldf-v4.7.zip")
 
 utils::download.file(file.path(glottolog_fn), destfile = filepath)
-utils::unzip(zipfile = filepath, exdir = "glottolog-cldf")
+utils::unzip(zipfile = filepath, exdir = "glottolog-cldf")}
 
 #Zenodo locations contain a dir with the name of the repos and the commit in the release. This is not convenient for later scripts, so we move the contents up one level
 old_fn <- list.dirs("glottolog-cldf", recursive = F)
 old_fn_files <- list.files(old_fn)
 new_fn <- "glottolog-cldf"
 
+if(!dir.exists(paths = "data/git_submodules/glottolog-cldf/cldf/")){
 file.copy(from = paste0(old_fn,"/", old_fn_files),to = new_fn, recursive = T, overwrite = T)
 #remove old dir
-unlink(old_fn, recursive = T)
-
+unlink(old_fn, recursive = T)}
 
 #finding the filenames for the two tables we are intersted in, the language and value tables. The specific filenames can vary, so instead of identifying them via the filename we should check which of the tables conform to particular CLDF-standards and then take the filenames for the tables that conform to those standards fromt the meta-datajson.
 
@@ -35,7 +39,8 @@ index <- 0
 #going over each table in the json and checking which one conforms and saving the index of that one to a separate variable. First: "values"
 for (table in glottolog_cldf_json$tables ) {
   
-  index <- index +1
+#table <- glottolog_cldf_json$tables[[1]]
+    index <- index +1
   
   if("dc:conformsTo" %in% names(table) & !is.null(table$`dc:conformsTo`)) { #not every table in a cldf dataset has this attribute, or it can be set to "null". So we gotta check that this is even a thing in this table before we proceed
     if(table$`dc:conformsTo` == "http://cldf.clld.org/v1.0/terms.rdf#ValueTable") {index_ValueTable  <- index}
@@ -43,7 +48,7 @@ for (table in glottolog_cldf_json$tables ) {
 
 #using the index we derived above, pulling out the filename for that table
 values_fn_name <- glottolog_cldf_json$tables[index_ValueTable][[1]]$url #not sure why this has the name "url" when it is just the filename but that is the way
-values_csv_url <- paste0(glottolog_cldf_github_folder, values_fn_name) #creating the URL path
+values_csv_url <- paste0(glottolog_cldf_fn, values_fn_name) #creating the URL path
 
 #doing the same thing for the second table we are interested in, "languages"
 
@@ -59,8 +64,7 @@ for (table in glottolog_cldf_json$tables ) {
 
 #using the index we derived above, pulling out the filename for that table
 language_fn_name <- glottolog_cldf_json$tables[index_LangaugeTable][[1]]$url
-languages_csv_url <- paste0(glottolog_cldf_github_folder, language_fn_name) #creating the URL path
-
+languages_csv_url <- paste0(glottolog_cldf_fn, language_fn_name) #creating the URL path
 
 #reading in data and making it wide
 values <- readr::read_csv(values_csv_url, na = c("","<NA>"), col_types = cols()) %>% 
