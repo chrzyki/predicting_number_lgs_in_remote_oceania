@@ -113,14 +113,14 @@ dates <- read_xlsx("data/island_group_settlement_date.xlsx") %>%
   filter(!is.na(settlement_date_grouping_finer))
 
 
-dates_summarised_for_Sm <- read_xlsx("data/island_group_settlement_date.xlsx") %>%
+dates_summarised_for_SM <- read_xlsx("data/island_group_settlement_date.xlsx") %>%
   rename(settlement_date_grouping_finer = "Time depth settlement group", Smallest_Island_group = `Smaller specific island group`, `Settlement date oldest date` = `Oldest date`) %>% 
   group_by(`Name in source`) %>% 
-  summarise(`Date ranges` = unique(`Date ranges`),
-            Source = unique(Source),
-            settlement_date_grouping_finer = unique(settlement_date_grouping_finer),
-            Meta_source = unique(Meta_source),
-            `Based on inference from neighbouring island?` = unique(`Based on inference from neighbouring island?`),
+  summarise(`Date ranges` = unique(paste0(`Date ranges`, collapse = ", ")),
+            Source = unique(paste0(Source, collapse = ", ")),
+            settlement_date_grouping_finer = unique(paste0(settlement_date_grouping_finer, collapse = ", ")),
+            Meta_source = unique(paste0(Meta_sourcecollapse = ", ")),
+            `Based on inference from neighbouring island?` = first(`Based on inference from neighbouring island?`),
             Island_groups = paste0(Smallest_Island_group, collapse = ", "))
   
   
@@ -141,8 +141,5 @@ basemap +
   scale_fill_viridis() +
   scale_color_viridis() 
 
-
 ggsave("output/plots/Map_RO_dates.png", width = 9, height = 6)
 ggsave("../latex/illustrations/plots_from_R/Map_RO_dates.png", width = 9, height = 6)
-
-
