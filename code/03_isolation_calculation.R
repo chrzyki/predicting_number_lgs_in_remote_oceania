@@ -49,8 +49,8 @@ atDist_melted_sided <-  atDist_melted %>%
    rename(Unique_ID_left = Var1, Unique_ID_right = Var2, dist = value) %>% 
    mutate(Unique_ID_left = as.character(Unique_ID_left)) %>% 
    mutate(Unique_ID_right = as.character(Unique_ID_right)) %>% 
-   left_join(dist_list_left_side) %>% 
-   left_join(dist_list_right_side) %>% 
+   left_join(dist_list_left_side, by = "Unique_ID_left") %>% 
+   left_join(dist_list_right_side, by = "Unique_ID_right") %>% 
   filter(Smallest_Island_group_left != Smallest_Island_group_right)
 
 atDist_melted_sided %>% 
@@ -78,14 +78,14 @@ atDist_df_w_island_largest_island_of_group_closest <- atDist_melted_sided %>%
   filter(Medium_only_merged_for_shared_language_right != Medium_only_merged_for_shared_language_left) %>% 
   group_by(Medium_only_merged_for_shared_language_left) %>% 
   top_n(1, wt = coastline_left) %>% 
-  inner_join(largest_island_per_group) %>% 
+  inner_join(largest_island_per_group, by = c("Unique_ID_right", "coastline_right")) %>% 
   group_by(Medium_only_merged_for_shared_language_left) %>% 
   top_n(1, wt = -dist)
 
 atDist_df_w_island_largest_island_of_group_closest %>% 
   filter(!str_detect(Marck_group_left, "Non Remote")) %>% 
   dplyr::select(Medium_only_merged_for_shared_language_left, Medium_only_merged_for_shared_language_right, dist) %>% 
-  write_tsv("output/isolation/isolation_medium_island.tsv")
+  write_tsv("output/processed_data/isolation_RO_geo_dist_isolation_medium_island.tsv")
 
 #Marck_group
 atDist_melted_sided_summaried_medium <- atDist_melted_sided %>% 
@@ -107,11 +107,11 @@ atDist_df_w_island_largest_island_of_group_closest <- atDist_melted_sided %>%
   filter(Marck_group_right != Marck_group_left) %>% 
   group_by(Marck_group_left) %>% 
   top_n(1, wt = -coastline_left) %>% 
-  inner_join(largest_island_per_group) %>% 
+  inner_join(largest_island_per_group, by = "Unique_ID_right") %>% 
   group_by(Marck_group_left) %>% 
   top_n(1, wt = -dist)
 
 atDist_df_w_island_largest_island_of_group_closest %>% 
   filter(!str_detect(Marck_group_left, "Non Remote")) %>% 
   dplyr::select(Marck_group_left, Marck_group_right, dist) %>% 
-  write_tsv("output/isolation/isolation_marck_group.tsv")
+  write_tsv("output/processed_data/isolation_RO_geo_dist_isolation_marck_group.tsv")
