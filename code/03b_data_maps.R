@@ -123,9 +123,6 @@ dates_summarised_for_SM <- read_xlsx("data/island_group_settlement_date.xlsx") %
             `Based on inference from neighbouring island?` = first(`Based on inference from neighbouring island?`),
             Island_groups = paste0(Smallest_Island_group, collapse = ", "))
   
-  
-
-
 dates_labels <- dates %>% 
   group_by(Marck_group, settlement_date_grouping_finer) %>% 
   summarise(Longitude = mean(Longitude), 
