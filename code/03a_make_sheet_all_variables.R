@@ -96,9 +96,13 @@ subregions <- read_tsv("data/oceania_subregions.tsv", show_col_types = F) %>%
   full_join(polygon_geo_grouping_hierarchy, by = "Smallest_Island_group")
 
 pol_complex <- readODS::read_ods("data/Remote_oceania_pol_complex_hedvig_code_latex.ods", sheet = 1) %>%
+  dplyr::select(Language_level_ID = glottocode, `Political complexity (EA033)`) %>% 
+  mutate(glottocode = ifelse(Language_level_ID == "fiji1243", "kada1285, sout2864,nort2843", Language_level_ID)) %>% 
+  mutate(glottocode = ifelse(Language_level_ID == "aust1304",  "raiv1237,tubu1240,ruru1237,rima1237", glottocode)) %>% 
+  mutate(glottocode = ifelse(Language_level_ID == "maor1246", "maor1246,mori1267", glottocode)) %>% 
+  mutate(glottocode = str_split(glottocode, ",")) %>% 
+  unnest(cols = c(glottocode)) %>% 
   dplyr::select(Glottocode = glottocode, pol_complex_code_Hedvig = "Political complexity (EA033)" ) %>% 
-#pol_complex <- read_csv("data/Remote_Oceania_Political_complex_and_more/Remote_oceania_pol_complex_hedvig_code.csv") %>% 
-#  dplyr::select(Glottocode = Language_level_ID, pol_complex_code_Hedvig) %>%
   left_join(subregions, by = "Glottocode") %>% 
   filter(!is.na(Smallest_Island_group)) %>% 
   distinct(Smallest_Island_group, pol_complex_code_Hedvig) %>% 
