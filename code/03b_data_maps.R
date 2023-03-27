@@ -91,7 +91,7 @@ pol_complex_data <- readODS::read_ods("data/Remote_oceania_pol_complex_hedvig_co
   dplyr::select(glottocode , `Political complexity (EA033)`) %>% 
   filter(!is.na(`Political complexity (EA033)`)) %>% 
   mutate(`Political complexity (EA033)` = as.character(`Political complexity (EA033)`)) %>% 
-  left_join(All_polygons, by = "glottocode") %>% 
+  inner_join(All_polygons, by = "glottocode") %>% 
     group_by(`Political complexity (EA033)`, glottocode) %>% 
     summarise(Latitude = mean(Latitude, na.rm = T),
               Longitude = mean(Longitude, na.rm = T), .groups = "drop") 
