@@ -95,8 +95,95 @@ ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
 #per medium group
 
 medium_groups <- read_tsv("output/processed_data/RO_Hedvig_aggregate_medium_island.tsv", show_col_types = F) %>% 
-  dplyr::select(Medium_only_merged_for_shared_language, color) %>% 
-  full_join(Polygon_lgs_glottocodes_sep, by = "Medium_only_merged_for_shared_language")
+  dplyr::select(Medium_only_merged_for_shared_language, color, lg_count) %>% 
+full_join(Polygon_lgs_glottocodes_sep, by = "Medium_only_merged_for_shared_language") %>% 
+  filter(!is.na(lg_count)) %>% 
+  filter(!is.na(Medium_only_merged_for_shared_language))
+
+color_vec_medium <- unique(medium_groups$color)
+
+#ggalt::geom_encircle cannot handle groups with 1 or 3 members. So for those island groups, we're adding rows with points that are super-near
+groups_two_few_points <- medium_groups %>% 
+  group_by(Medium_only_merged_for_shared_language) %>% 
+  summarise(n = n()) %>%
+  filter(n < 3)
+
+medium_groups_too_few_points_df <- medium_groups  %>% 
+  filter(Medium_only_merged_for_shared_language %in% groups_two_few_points$Medium_only_merged_for_shared_language)
+
+medium_groups_too_few_points_df_minus <- medium_groups_too_few_points_df %>% 
+  mutate(Longitude = Longitude - 0.05, 
+         Latitude = Latitude - 0.05)
+
+medium_groups_too_few_points_df_plus <- medium_groups_too_few_points_df %>% 
+  mutate(Longitude = Longitude + 0.05, 
+         Latitude = Latitude + 0.05)
+
+medium_groups_for_encircle_plotting_df <- medium_groups %>% 
+  rbind(medium_groups_too_few_points_df_minus) %>% 
+  rbind(medium_groups_too_few_points_df_plus)
+
+#label df with lg_count
+medium_groups_for_encircle_plotting_df_labels <- medium_groups_for_encircle_plotting_df %>% 
+  filter(lg_count >1) %>% 
+  group_by(Medium_only_merged_for_shared_language, lg_count) %>% 
+  summarise(mean_lat = mean(Latitude, na.rm = T),
+            mean_long = mean(Longitude, na.rm = T),
+            .groups = "drop")
+
+medium_groups_for_encircle_plotting_df_labels_vanuatu <- 
+  medium_groups_for_encircle_plotting_df_labels %>% 
+  filter(between(mean_long, 164, 172)) %>% 
+  filter(between(mean_lat, -22, -9)) 
+
+medium_groups_for_encircle_plotting_df_labels_without_vanuatu <- medium_groups_for_encircle_plotting_df_labels  %>% 
+  anti_join(medium_groups_for_encircle_plotting_df_labels_vanuatu)
+
+basemap + 
+  geom_encircle(data = medium_groups_for_encircle_plotting_df, mapping = aes(x=Longitude, y=Latitude, color = Medium_only_merged_for_shared_language), 
+                size = 2,
+                expand = 0.005, 
+                s_shape = 1
+)  +
+  ggrepel::geom_label_repel(data = medium_groups_for_encircle_plotting_df_labels_without_vanuatu, mapping =aes(x = mean_long,  y = mean_lat,                                     label = lg_count,                                      size = 0.01, 
+                                                                               color = Medium_only_merged_for_shared_language),
+             label.padding = unit(0.2, "lines"), 
+             max.overlaps = 40)+
+  theme(legend.position = "None") +
+  scale_color_manual(values = color_vec_medium) +
+  geom_segment(x = 162, y = -24, yend = -9, xend = 162, color = "#5A5A5A") +
+  geom_segment(x = 172, y = -24, yend = -9, xend = 172, color = "#5A5A5A") +
+  geom_segment(x = 162, y = -9, yend = -9, xend = 172, color = "#5A5A5A") +
+  geom_segment(x = 162, y = -24, yend = -24, xend = 172, color = "#5A5A5A")
+
+ggsave("output/plots/polygon_medium_group_map.png", width = 15, height = 10)
 
 
-#ggsave("output/plots/polygon_medium_group_map.png", width = 15, height = 8)
+#Only vanuatu
+
+vanuatu_inset <- basemap + 
+  geom_encircle(data = medium_groups_for_encircle_plotting_df, mapping = aes(x=Longitude, y=Latitude, color = Medium_only_merged_for_shared_language), 
+                size = 2,
+                expand = 0.05, 
+                s_shape = 1
+  )  +
+  ggrepel::geom_label_repel(data = medium_groups_for_encircle_plotting_df_labels_vanuatu , mapping =aes(x = mean_long,  y = mean_lat,                                     label = lg_count,                                      size = 0.01, 
+                                                                                               color = Medium_only_merged_for_shared_language),
+                            label.padding = unit(0.2, "lines"), 
+                            max.time = 2,
+                            max.iter = 20000,
+                            force = 2,
+                            max.overlaps = 40)+
+  theme(legend.position = "None") +
+  scale_color_manual(values = color_vec_medium) +
+  ylim(c(-22, -9)) +
+  xlim(c(164, 172))
+
+#medium_map + patchwork::inset_element(vanuatu_inset, 
+#                                      right = 0.4, 
+#                                      bottom = 0.0, 
+#                                      left = -0.2, 
+#                                      top = 0.9)
+
+ggsave("output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
+
