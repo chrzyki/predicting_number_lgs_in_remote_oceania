@@ -87,7 +87,7 @@ basemap +
              label.padding = unit(0.2, "lines"))+
   scale_color_manual(values = color_vec_marck) +
   xlim(c(90, 252)) +
-  ylim(c(-48, 25))+
+  ylim(c(-48, 23))+
   theme( panel.background = element_rect(fill = "white"))
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
@@ -156,7 +156,7 @@ medium_map <- basemap +
   geom_segment(x = 162.5, y = -9, yend = -9, xend = 172, color = "#808080") +
   geom_segment(x = 162.5, y = -24, yend = -24, xend = 172, color = "#808080")+
   xlim(c(90, 252)) +
-  ylim(c(-48, 25)) +
+  ylim(c(-48, 23)) +
 theme( panel.background = element_rect(fill = "white"))
 
 ggsave(plot = 
@@ -209,7 +209,7 @@ vanuatu_inset <- basemap +
 ggsave(plot = vanuatu_inset, filename = "output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
 
 mi <- medium_map +
-  geom_segment(x = 162.5, y = -9, yend = -3, xend = 147, color = "#808080") + #upper diagonal line
+  geom_segment(x = 162.5, y = -9, yend = -4, xend = 147, color = "#808080") + #upper diagonal line
   geom_segment(x = 162.5, y = -24, yend = -54, xend = 145, color = "#808080") + #lower diagonal line
   patchwork::inset_element(vanuatu_inset, align_to = "plot",
                                       right = 0.55, 
