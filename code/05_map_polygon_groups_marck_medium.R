@@ -209,7 +209,7 @@ vanuatu_inset <- basemap +
 ggsave(plot = vanuatu_inset, filename = "output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
 
 mi <- medium_map +
-  geom_segment(x = 162.5, y = -9, yend = -4, xend = 147, color = "#808080") + #upper diagonal line
+  geom_segment(x = 162.5, y = -9, yend = -4.5, xend = 147, color = "#808080") + #upper diagonal line
   geom_segment(x = 162.5, y = -24, yend = -54, xend = 145, color = "#808080") + #lower diagonal line
   patchwork::inset_element(vanuatu_inset, align_to = "plot",
                                       right = 0.55, 
