@@ -138,5 +138,5 @@ basemap +
   scale_fill_viridis() +
   scale_color_viridis() 
 
-ggsave("output/plots/Map_RO_dates.png", width = 9, height = 6)
+ggsave("output/plots/maps/Map_RO_dates.png", width = 9, height = 6)
 ggsave("../latex/illustrations/plots_from_R/Map_RO_dates.png", width = 9, height = 6)
