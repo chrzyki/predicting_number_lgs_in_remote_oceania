@@ -87,9 +87,11 @@ basemap +
              label.padding = unit(0.2, "lines"))+
   scale_color_manual(values = color_vec_marck) +
   xlim(c(90, 252)) +
-  ylim(c(-48, 25))
+  ylim(c(-48, 25))+
+  theme( panel.background = element_rect(fill = "white"))
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
+
 
 #per medium group
 
@@ -172,6 +174,14 @@ medium_groups_for_encircle_plotting_df_only_vanuatu <-
 
 vanuatu_inset <- basemap +   
   geom_rect(aes(xmin = 162.5, xmax = 172, ymin = -24, ymax = -9), fill = "white") +
+  geom_polygon(data=world, aes(x=long, 
+                               y=lat,group=group),
+               colour="gray87", 
+               fill="gray87", linewidth = 0.5) +
+  geom_polygon(data=lakes, aes(x=long, 
+                               y=lat,group=group),
+               colour="gray87", 
+               fill="white", linewidth = 0.3)  + 
   geom_encircle(data = medium_groups_for_encircle_plotting_df_only_vanuatu, mapping = aes(x=Longitude, y=Latitude, color = Medium_only_merged_for_shared_language), 
                 size = 2,
                 expand = 0.0005, 
@@ -199,8 +209,8 @@ vanuatu_inset <- basemap +
 ggsave(plot = vanuatu_inset, filename = "output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
 
 mi <- medium_map +
-  geom_segment(x = 162.5, y = -25, yend = -53, xend = 145, color = "#808080") +
-  geom_segment(x = 162.5, y = -9, yend = -3, xend = 145, color = "#808080") + 
+  geom_segment(x = 162.5, y = -9, yend = -3, xend = 147, color = "#808080") + #upper diagonal line
+  geom_segment(x = 162.5, y = -24, yend = -54, xend = 145, color = "#808080") + #lower diagonal line
   patchwork::inset_element(vanuatu_inset, align_to = "plot",
                                       right = 0.55, 
                                       bottom = 0.0, 
