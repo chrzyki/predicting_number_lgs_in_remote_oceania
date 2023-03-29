@@ -90,7 +90,7 @@ basemap +
   ylim(c(-48, 23))+
   theme( panel.background = element_rect(fill = "white"))
 
-ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
+ggsave("output/plots/maps/polygon_Marck_group_map.png", width = 15, height = 8)
 
 
 #per medium group
@@ -160,7 +160,7 @@ medium_map <- basemap +
 theme( panel.background = element_rect(fill = "white"))
 
 ggsave(plot = 
-         medium_map, filename = "output/plots/polygon_medium_group_map.png", width = 15, height = 10)
+         medium_map, filename = "output/plots/maps/polygon_medium_group_map.png", width = 15, height = 10)
 
 medium_groups_for_encircle_plotting_df_only_vanuatu <-
   medium_groups_for_encircle_plotting_df %>% 
@@ -206,7 +206,7 @@ vanuatu_inset <- basemap +
           plot.background = element_rect(fill='transparent', color=NA)) 
 
   
-ggsave(plot = vanuatu_inset, filename = "output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
+ggsave(plot = vanuatu_inset, filename = "output/plots/maps/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
 
 mi <- medium_map +
   geom_segment(x = 162.5, y = -9, yend = -4.5, xend = 147, color = "#808080") + #upper diagonal line
@@ -218,4 +218,4 @@ mi <- medium_map +
                                       top = 0.65)
 
 
-ggsave(plot = mi, filename = "output/plots/polygon_medium_group_map_vanuatu_mh_inset.png", width = 15, height = 10)
+ggsave(plot = mi, filename = "output/plots/maps/polygon_medium_group_map_vanuatu_mh_inset.png", width = 15, height = 10)
