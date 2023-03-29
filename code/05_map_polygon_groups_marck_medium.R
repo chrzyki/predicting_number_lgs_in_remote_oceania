@@ -87,7 +87,7 @@ basemap +
              label.padding = unit(0.2, "lines"))+
   scale_color_manual(values = color_vec_marck) +
   xlim(c(90, 252)) +
-  ylim(c(-56, 25))
+  ylim(c(-48, 25))
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
 
@@ -154,7 +154,7 @@ medium_map <- basemap +
   geom_segment(x = 162.5, y = -9, yend = -9, xend = 172, color = "#808080") +
   geom_segment(x = 162.5, y = -24, yend = -24, xend = 172, color = "#808080")+
   xlim(c(90, 252)) +
-  ylim(c(-56, 25)) +
+  ylim(c(-48, 25)) +
 theme( panel.background = element_rect(fill = "white"))
 
 ggsave(plot = 
@@ -170,7 +170,8 @@ medium_groups_for_encircle_plotting_df_only_vanuatu <-
 
 #Only vanuatu
 
-vanuatu_inset <- basemap + 
+vanuatu_inset <- basemap +   
+  geom_rect(aes(xmin = 162.5, xmax = 172, ymin = -24, ymax = -9), fill = "white") +
   geom_encircle(data = medium_groups_for_encircle_plotting_df_only_vanuatu, mapping = aes(x=Longitude, y=Latitude, color = Medium_only_merged_for_shared_language), 
                 size = 2,
                 expand = 0.0005, 
@@ -191,17 +192,20 @@ vanuatu_inset <- basemap +
                             force = 2,
                             max.overlaps = 40)  +
   theme(plot.margin=grid::unit(c(0,0,0,0), "mm")) +
-  theme( panel.background = element_blank())
+  theme(panel.background = element_rect(fill='transparent'),
+          plot.background = element_rect(fill='transparent', color=NA)) 
 
   
 ggsave(plot = vanuatu_inset, filename = "output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
 
-mh <- medium_map +
-  geom_segment(x = 162.5, y = -24, yend = -60, xend = 150, color = "#808080") +
-  geom_segment(x = 162.5, y = -9, yend = -6, xend = 150, color = "#808080") + patchwork::inset_element(vanuatu_inset, align_to = "plot",
+mi <- medium_map +
+  geom_segment(x = 162.5, y = -25, yend = -53, xend = 145, color = "#808080") +
+  geom_segment(x = 162.5, y = -9, yend = -3, xend = 145, color = "#808080") + 
+  patchwork::inset_element(vanuatu_inset, align_to = "plot",
                                       right = 0.55, 
                                       bottom = 0.0, 
                                       left = 0, 
                                       top = 0.65)
 
-ggsave(plot = mh, filename = "output/plots/polygon_medium_group_map_vanuatu_mh_inset.png", width = 15, height = 10)
+
+ggsave(plot = mi, filename = "output/plots/polygon_medium_group_map_vanuatu_mh_inset.png", width = 15, height = 10)
