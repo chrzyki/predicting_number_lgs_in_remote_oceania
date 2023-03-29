@@ -20,24 +20,22 @@ basemap <- ggplot(glottolog_lat_long_shifted) +
   geom_polygon(data=world, aes(x=long, 
                                y=lat,group=group),
                colour="gray87", 
-               fill="gray87", size = 0.5) +
+               fill="gray87", linewidth = 0.5) +
   geom_polygon(data=lakes, aes(x=long, 
                                y=lat,group=group),
                colour="gray87", 
-               fill="white", size = 0.3)  + 
+               fill="white", linewidth = 0.3)  + 
   theme(panel.grid.major = element_blank(), #all of these lines are just removing default things like grid lines, axises etc
         panel.grid.minor = element_blank(),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         axis.line = element_blank(), 
         panel.border = element_blank(), 
-        panel.background = element_rect(fill = "white"),
         axis.text.x = element_blank(),  
         axis.text.y = element_blank(),  
-        axis.ticks = element_blank())   +
-  coord_map(projection = "vandergrinten") +
-  xlim(c(90, 252)) +
-  ylim(c(-56, 25))
+        axis.ticks = element_blank(),
+        legend.position = "None", plot.margin=grid::unit(c(0,0,0,0), "mm")) +
+  coord_map(projection = "vandergrinten")
 
 ##Per Marck_group
 
@@ -87,8 +85,9 @@ basemap +
                                                                                size = 0.01, 
                                                                                color = Marck_group),
              label.padding = unit(0.2, "lines"))+
-  theme(legend.position = "None") +
-  scale_color_manual(values = color_vec_marck)
+  scale_color_manual(values = color_vec_marck) +
+  xlim(c(90, 252)) +
+  ylim(c(-56, 25))
 
 ggsave("output/plots/polygon_Marck_group_map.png", width = 15, height = 8)
 
@@ -137,9 +136,9 @@ medium_groups_for_encircle_plotting_df_labels_vanuatu <-
   filter(between(mean_lat, -22, -9)) 
 
 medium_groups_for_encircle_plotting_df_labels_without_vanuatu <- medium_groups_for_encircle_plotting_df_labels  %>% 
-  anti_join(medium_groups_for_encircle_plotting_df_labels_vanuatu)
+  anti_join(medium_groups_for_encircle_plotting_df_labels_vanuatu, by = c("Medium_only_merged_for_shared_language", "lg_count", "mean_lat", "mean_long"))
 
-basemap + 
+medium_map <- basemap + 
   geom_encircle(data = medium_groups_for_encircle_plotting_df, mapping = aes(x=Longitude, y=Latitude, color = Medium_only_merged_for_shared_language), 
                 size = 2,
                 expand = 0.0005, 
@@ -148,15 +147,18 @@ basemap +
   ggrepel::geom_label_repel(data = medium_groups_for_encircle_plotting_df_labels_without_vanuatu, mapping =aes(x = mean_long,  y = mean_lat,                                     label = lg_count,                                      size = 0.01, 
                                                                                color = Medium_only_merged_for_shared_language),
              label.padding = unit(0.2, "lines"), 
-             max.overlaps = 40)+
-  theme(legend.position = "None") +
+             max.overlaps = 40) +
   scale_color_manual(values = color_vec_medium) +
-  geom_segment(x = 162, y = -24, yend = -9, xend = 162, color = "#808080") +
+  geom_segment(x = 162.5, y = -24, yend = -9, xend = 162.5, color = "#808080") +
   geom_segment(x = 172, y = -24, yend = -9, xend = 172, color = "#808080") +
-  geom_segment(x = 162, y = -9, yend = -9, xend = 172, color = "#808080") +
-  geom_segment(x = 162, y = -24, yend = -24, xend = 172, color = "#808080")
+  geom_segment(x = 162.5, y = -9, yend = -9, xend = 172, color = "#808080") +
+  geom_segment(x = 162.5, y = -24, yend = -24, xend = 172, color = "#808080")+
+  xlim(c(90, 252)) +
+  ylim(c(-56, 25)) +
+theme( panel.background = element_rect(fill = "white"))
 
-ggsave("output/plots/polygon_medium_group_map.png", width = 15, height = 10)
+ggsave(plot = 
+         medium_map, filename = "output/plots/polygon_medium_group_map.png", width = 15, height = 10)
 
 medium_groups_for_encircle_plotting_df_only_vanuatu <-
   medium_groups_for_encircle_plotting_df %>% 
@@ -174,22 +176,32 @@ vanuatu_inset <- basemap +
                 expand = 0.0005, 
                 s_shape = 1
   )  +
+  scale_color_manual(values = color_vec_medium) +
+  ylim(c(-24, -9)) +
+  xlim(c(162.5, 172)) +
+  geom_segment(x = 162.5, y = -24, yend = -9, xend = 162.5, color = "#808080") +
+  geom_segment(x = 172, y = -24, yend = -9, xend = 172, color = "#808080") +
+  geom_segment(x = 162.5, y = -9, yend = -9, xend = 172, color = "#808080") +
+  geom_segment(x = 162.5, y = -24, yend = -24, xend = 172, color = "#808080") +
   ggrepel::geom_label_repel(data = medium_groups_for_encircle_plotting_df_labels_vanuatu , mapping =aes(x = mean_long,  y = mean_lat,                                     label = lg_count,                                      size = 0.01, 
-                                                                                               color = Medium_only_merged_for_shared_language),
+                                                                                                        color = Medium_only_merged_for_shared_language),
                             label.padding = unit(0.2, "lines"), 
                             max.time = 2,
                             max.iter = 20000,
                             force = 2,
-                            max.overlaps = 40)+
-  theme(legend.position = "None") +
-  scale_color_manual(values = color_vec_medium) +
-  ylim(c(-24, -9)) +
-  xlim(c(164, 174))
+                            max.overlaps = 40)  +
+  theme(plot.margin=grid::unit(c(0,0,0,0), "mm")) +
+  theme( panel.background = element_blank())
 
-#medium_map + patchwork::inset_element(vanuatu_inset, 
-#                                      right = 0.4, 
-#                                      bottom = 0.0, 
-#                                      left = -0.2, 
-#                                      top = 0.9)
+  
+ggsave(plot = vanuatu_inset, filename = "output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
 
-ggsave("output/plots/polygon_medium_group_map_vanuatu_only.png", width = 7, height = 6)
+mh <- medium_map +
+  geom_segment(x = 162.5, y = -24, yend = -60, xend = 150, color = "#808080") +
+  geom_segment(x = 162.5, y = -9, yend = -6, xend = 150, color = "#808080") + patchwork::inset_element(vanuatu_inset, align_to = "plot",
+                                      right = 0.55, 
+                                      bottom = 0.0, 
+                                      left = 0, 
+                                      top = 0.65)
+
+ggsave(plot = mh, filename = "output/plots/polygon_medium_group_map_vanuatu_mh_inset.png", width = 15, height = 10)
